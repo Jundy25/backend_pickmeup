@@ -24,17 +24,17 @@ class AuthController extends Authenticatable
      * Store a newly created resource in storage.
      */
 
-    public function showParticipant() {
+    public function showCustomer() {
         try {
-            return User::where('role_id', 2)->get();
+            return User::where('role_id', 3)->get();
         } catch (\Throwable $th) {
             return response(["message" => $th->getMessage()]);
         }
     }
 
-    public function showOrganizer() {
+    public function showRider() {
         try {
-            return User::where('role_id', 3)->get();
+            return User::where('role_id', 2)->get();
         } catch (\Throwable $th) {
             return response(["message" => $th->getMessage()]);
         }
