@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
-    protected $table = 'users';
+    use HasApiTokens, HasFactory, Notifiable;
+
     protected $primaryKey = 'user_id';
 
     protected $fillable = [
@@ -25,10 +23,7 @@ class User extends Authenticatable
         'user_name',
         'password',
         'mobile_number',
-        'street_address',
-        'city',
-        'post_code',
-        'country'
+        'status'
     ];
 
     protected $hidden = [
@@ -45,30 +40,40 @@ class User extends Authenticatable
 
     public function role()
     {
-        return $this->hasOne('App\Models\Role', 'role_id');
+        return $this->belongsTo(Role::class, 'role_id', 'role_id');
     }
 
-  
-    public function registration() 
+    // In User model or a separate RoleConstants class
+    public const ROLE_RIDER = 3;
+    public const ROLE_CUSTOMER = 4;
+
+    public function riderRegistrations()
     {
-        return $this->hasMany('App\Models\Registration', 'register_id');
+        return $this->hasMany(Rider::class, 'user_id', 'user_id');
     }
 
-  
-    public function notification() 
+    public function rideHistories()
     {
-        return $this->hasMany('App\Models\Notification', 'notification_id');
+        return $this->hasMany(RideHistory::class, 'user_id', 'user_id');
     }
 
-  
-    public function evaluation() 
+    public function feedbacks()
     {
-        return $this->belongsTo('App\Models\Evaluation', 'evaluation_id');
+        return $this->morphMany(Feedback::class, 'sender');
     }
 
-
-  public function events()
+    public function activityLogs()
     {
-        return $this->belongsToMany('App\Models\Event', 'event_participants', 'user_id', 'event_id');
+        return $this->hasMany(ActivityLog::class, 'user_id', 'user_id');
+    }
+
+    public function sentActivities()
+    {
+        return $this->morphMany(ActivityLog::class, 'sender');
+    }
+
+    public function receivedActivities()
+    {
+        return $this->morphMany(ActivityLog::class, 'recipient');
     }
 }

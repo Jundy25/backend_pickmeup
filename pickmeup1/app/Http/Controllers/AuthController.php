@@ -52,7 +52,7 @@ class AuthController extends Authenticatable
     
             
             if (!Auth::attempt($credentials)) {
-                return response(['message' => "account doesn't exist"], 404);
+                return response(['message' => "Account doesn't exist"], 404);
             }
 
             $user = $request->user();

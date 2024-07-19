@@ -3,11 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\EvaluationController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\RegistrationController;
-use App\Http\Controllers\ScheduleController;
-use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RiderController;
 use App\Models\Sanctum\PersonalAccessToken;
 use Laravel\Sanctum\Sanctum;
 
@@ -21,5 +18,8 @@ Route::prefix('/user')->group(function() {
     Route::post('/logout', [AuthController::class, 'logoutAccount'])->middleware(['auth:sanctum']);
     Route::get('/rider', [AuthController::class, 'showRider']);
     Route::get('/customer', [AuthController::class, 'showCustomer']);
+    Route::get('/dashboard/counts', [DashboardController::class, 'getCounts']);
+    Route::get('/riders', [RiderController::class, 'getRiders']);
+
 });
 
