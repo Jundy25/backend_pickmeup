@@ -89,7 +89,7 @@ class DatabaseSeeder extends Seeder
                 'user_name' => 'aladdin',
                 'password' => Hash::make('aladdin'),
                 'mobile_number' => '1234567890',
-                'status' => 'Disabled',
+                'status' => 'Active',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -299,7 +299,7 @@ class DatabaseSeeder extends Seeder
                 Rider::create([
                     'user_id' => $rider->user_id,
                     'registration_date' => now(),
-                    'verification_status' => 'pending', 
+                    'verification_status' => 'Pending', 
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
