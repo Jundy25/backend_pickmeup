@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RiderController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\AdminController;
 use App\Models\Sanctum\PersonalAccessToken;
 use Laravel\Sanctum\Sanctum;
 
@@ -20,6 +22,8 @@ Route::prefix('/user')->group(function() {
     Route::get('/customer', [AuthController::class, 'showCustomer']);
     Route::get('/dashboard/counts', [DashboardController::class, 'getCounts']);
     Route::get('/riders', [RiderController::class, 'getRiders']);
+    Route::get('/customers', [CustomerController::class, 'getCustomers']);
+    Route::get('/admin', [AdminController::class, 'getAdmin']);
 
 });
 

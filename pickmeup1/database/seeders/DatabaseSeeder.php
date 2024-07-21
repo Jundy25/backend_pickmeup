@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+
+use App\Models\User;
+use App\Models\Rider;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -86,7 +89,7 @@ class DatabaseSeeder extends Seeder
                 'user_name' => 'aladdin',
                 'password' => Hash::make('aladdin'),
                 'mobile_number' => '1234567890',
-                'status' => 'Active',
+                'status' => 'Disabled',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -128,7 +131,7 @@ class DatabaseSeeder extends Seeder
                 'user_name' => 'rider3',
                 'password' => Hash::make('rider3'),
                 'mobile_number' => '1234567890',
-                'status' => 'Active',
+                'status' => 'Disabled',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -142,7 +145,7 @@ class DatabaseSeeder extends Seeder
                 'user_name' => 'john',
                 'password' => Hash::make('john'),
                 'mobile_number' => '1234567890',
-                'status' => 'Active',
+                'status' => 'Disabled',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -289,5 +292,17 @@ class DatabaseSeeder extends Seeder
 
 
         ]);
+
+
+        $riders = User::where('role_id', 3)->get();
+            foreach ($riders as $rider) {
+                Rider::create([
+                    'user_id' => $rider->user_id,
+                    'registration_date' => now(),
+                    'verification_status' => 'pending', 
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
     }
 }

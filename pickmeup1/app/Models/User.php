@@ -44,12 +44,14 @@ class User extends Authenticatable
     }
 
     // In User model or a separate RoleConstants class
+    public const ROLE_SUPERADMIN = 1;
+    public const ROLE_ADMIN = 2;
     public const ROLE_RIDER = 3;
     public const ROLE_CUSTOMER = 4;
 
-    public function riderRegistrations()
+    public function rider()
     {
-        return $this->hasMany(Rider::class, 'user_id', 'user_id');
+        return $this->hasOne(Rider::class, 'user_id', 'user_id');
     }
 
     public function rideHistories()

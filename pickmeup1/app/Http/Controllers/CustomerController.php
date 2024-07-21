@@ -8,10 +8,10 @@ use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-    public function getCustomer()
+    public function getCustomers()
     {
-        $riders = User::where('role_id', User::ROLE_CUSTOMER)->get(['first_name', 'last_name', 'mobile_number', 'status']);
-        return response()->json($riders);
+        $customers = User::where('role_id', User::ROLE_CUSTOMER)->get(['first_name', 'last_name', 'mobile_number', 'status']);
+        return response()->json($customers);
     }
 
 }

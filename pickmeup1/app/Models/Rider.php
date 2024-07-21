@@ -41,4 +41,13 @@ class Rider extends Model
     {
         return $this->morphMany(ActivityLog::class, 'recipient');
     }
+
+    public function updateUserStatus()
+{
+    if ($this->verification_status === 'verified') {
+        $this->user()->update(['status' => 'Active']);
+    } else {
+        $this->user()->update(['status' => 'Inactive']);
+    }
+}
 }
