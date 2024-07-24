@@ -293,7 +293,6 @@ class DatabaseSeeder extends Seeder
 
         ]);
 
-
         $riders = User::where('role_id', 3)->get();
             foreach ($riders as $rider) {
                 Rider::create([
@@ -304,5 +303,182 @@ class DatabaseSeeder extends Seeder
                     'updated_at' => now(),
                 ]);
             }
+
+
+        DB::table('ride_histories')->insert([
+            [
+                'user_id' => 9,
+                'rider_id' => 1,
+                'ride_date' => '2024-07-01 08:30:00',
+                'pickup_location' => '123 Main St',
+                'dropoff_location' => '456 Oak St',
+                'fare' => 15.50,
+                'status' => 'Completed',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 9,
+                'rider_id' => 2,
+                'ride_date' => '2024-07-02 09:00:00',
+                'pickup_location' => '789 Pine St',
+                'dropoff_location' => '101 Maple St',
+                'fare' => 10.00,
+                'status' => 'Completed',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 10,
+                'rider_id' => 3,
+                'ride_date' => '2024-07-03 10:00:00',
+                'pickup_location' => '234 Elm St',
+                'dropoff_location' => '567 Cedar St',
+                'fare' => 12.75,
+                'status' => 'Cancelled',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 11,
+                'rider_id' => 4,
+                'ride_date' => '2024-07-04 11:00:00',
+                'pickup_location' => '890 Spruce St',
+                'dropoff_location' => '123 Birch St',
+                'fare' => 20.00,
+                'status' => 'Completed',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 12,
+                'rider_id' => 5,
+                'ride_date' => '2024-07-05 12:00:00',
+                'pickup_location' => '456 Walnut St',
+                'dropoff_location' => '789 Chestnut St',
+                'fare' => 25.00,
+                'status' => 'Pending',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 13,
+                'rider_id' => 6,
+                'ride_date' => '2024-07-06 13:00:00',
+                'pickup_location' => '101 Ash St',
+                'dropoff_location' => '234 Cypress St',
+                'fare' => 18.00,
+                'status' => 'Completed',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 14,
+                'rider_id' => 3,
+                'ride_date' => '2024-07-07 14:00:00',
+                'pickup_location' => '567 Alder St',
+                'dropoff_location' => '890 Beech St',
+                'fare' => 16.50,
+                'status' => 'Completed',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 15,
+                'rider_id' => 4,
+                'ride_date' => '2024-07-08 15:00:00',
+                'pickup_location' => '123 Dogwood St',
+                'dropoff_location' => '456 Fir St',
+                'fare' => 19.00,
+                'status' => 'Completed',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 9,
+                'rider_id' => 1,
+                'ride_date' => '2024-07-09 16:00:00',
+                'pickup_location' => '789 Hickory St',
+                'dropoff_location' => '101 Holly St',
+                'fare' => 14.00,
+                'status' => 'Completed',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 10,
+                'rider_id' => 5,
+                'ride_date' => '2024-07-10 17:00:00',
+                'pickup_location' => '234 Ivy St',
+                'dropoff_location' => '567 Juniper St',
+                'fare' => 22.50,
+                'status' => 'Completed',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+
+
+
+        DB::table('feedbacks')->insert([
+            [
+                'sender_id' => 9,
+                'sender_type' => 'Customer',
+                'recipient_id' => 3,
+                'recipient_type' => 'Rider',
+                'comment' => 'Rider is not friendly and dropped at wrong location',
+                'rating' => 2.5,
+                'ride_id' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'sender_id' => 4,
+                'sender_type' => 'Rider',
+                'recipient_id' => 10,
+                'recipient_type' => 'Customer',
+                'comment' => 'Customer did not pay',
+                'rating' => 1.0,
+                'ride_id' => 2,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'sender_id' => 11,
+                'sender_type' => 'Customer',
+                'recipient_id' => 5,
+                'recipient_type' => 'Rider',
+                'comment' => 'Rider is very responsible and friendly',
+                'rating' => 5.0,
+                'ride_id' => 3,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'sender_id' => 12,
+                'sender_type' => 'Customer',
+                'recipient_id' => 6,
+                'recipient_type' => 'Rider',
+                'comment' => 'Rider was late',
+                'rating' => 3.0,
+                'ride_id' => 4,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'sender_id' => 5,
+                'sender_type' => 'Rider',
+                'recipient_id' => 10,
+                'recipient_type' => 'Customer',
+                'comment' => 'Customer gave clear instructions',
+                'rating' => 4.5,
+                'ride_id' => 6,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        ]);
+
+
+        
     }
 }

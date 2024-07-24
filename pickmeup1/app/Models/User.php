@@ -64,6 +64,11 @@ class User extends Authenticatable
         return $this->morphMany(Feedback::class, 'sender');
     }
 
+    public function receivedFeedbacks()
+    {
+        return $this->morphMany(Feedback::class, 'recipient');
+    }
+
     public function activityLogs()
     {
         return $this->hasMany(ActivityLog::class, 'user_id', 'user_id');
