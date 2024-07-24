@@ -12,9 +12,12 @@ class CreateFeedbacksTable extends Migration
             $table->id('feedback_id');
             $table->morphs('sender'); // Creates sender_id and sender_type columns
             $table->morphs('recipient'); // Creates recipient_id and recipient_type columns
-            $table->text('comments');
-            $table->integer('rating');
+            $table->text('comment');
+            $table->decimal('rating', 8, 2);
+            $table->unsignedBigInteger('ride_id');
             $table->timestamps();
+
+            $table->foreign('ride_id')->references('ride_id')->on('ride_histories');
         });
     }
 
