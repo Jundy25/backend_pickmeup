@@ -19,8 +19,8 @@ class CreateRideHistoriesTable extends Migration
             $table->string('status');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('user_id')->on('users');
-            $table->foreign('rider_id')->references('rider_id')->on('riders');
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
+            $table->foreign('rider_id')->references('user_id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -29,4 +29,3 @@ class CreateRideHistoriesTable extends Migration
         Schema::dropIfExists('ride_histories');
     }
 }
-

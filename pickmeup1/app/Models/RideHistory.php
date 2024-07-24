@@ -18,7 +18,7 @@ class RideHistory extends Model
         'pickup_location',
         'dropoff_location',
         'fare',
-        'status'
+        'status',
     ];
 
     public function user()
@@ -28,11 +28,6 @@ class RideHistory extends Model
 
     public function rider()
     {
-        return $this->belongsTo(Rider::class, 'rider_id', 'rider_id');
-    }
-
-    public function feedbacks()
-    {
-        return $this->hasMany(Feedback::class, 'ride_id', 'ride_id');
+        return $this->belongsTo(User::class, 'rider_id', 'user_id');
     }
 }

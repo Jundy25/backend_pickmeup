@@ -8,6 +8,7 @@ use App\Http\Controllers\RiderController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\HistoryController;
 use App\Models\Sanctum\PersonalAccessToken;
 use Laravel\Sanctum\Sanctum;
 
@@ -28,6 +29,7 @@ Route::prefix('/user')->group(function() {
     Route::put('admin/{user_id}/status', [AdminController::class, 'updateStatus']);
     Route::put('customer/{user_id}/status', [CustomerController::class, 'updateStatus']);
     Route::put('rider/{user_id}/status', [CustomerController::class, 'updateStatus']);
+    Route::get('/history', [HistoryController::class, 'index']);
     Route::get('/feedbacks', [FeedbackController::class, 'index']);
 });
 

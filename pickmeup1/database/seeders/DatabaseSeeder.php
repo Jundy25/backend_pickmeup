@@ -166,7 +166,7 @@ class DatabaseSeeder extends Seeder
             [
                 'role_id' => 4,
                 'first_name' => 'Customer',
-                'last_name' => 'Customer',
+                'last_name' => '1',
                 'gender' => 'Male',
                 'date_of_birth' => '1920-01-15',
                 'email' => 'customer@gmail.com',
@@ -277,8 +277,8 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'role_id' => 4,
-                'first_name' => 'Customer4',
-                'last_name' => 'Customer4',
+                'first_name' => 'Customer',
+                'last_name' => '4',
                 'gender' => 'Male',
                 'date_of_birth' => '1920-01-15',
                 'email' => 'customer4@gmail.com',
@@ -308,7 +308,7 @@ class DatabaseSeeder extends Seeder
         DB::table('ride_histories')->insert([
             [
                 'user_id' => 9,
-                'rider_id' => 1,
+                'rider_id' => 3,
                 'ride_date' => '2024-07-01 08:30:00',
                 'pickup_location' => '123 Main St',
                 'dropoff_location' => '456 Oak St',
@@ -319,7 +319,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => 9,
-                'rider_id' => 2,
+                'rider_id' => 4,
                 'ride_date' => '2024-07-02 09:00:00',
                 'pickup_location' => '789 Pine St',
                 'dropoff_location' => '101 Maple St',
@@ -330,7 +330,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => 10,
-                'rider_id' => 3,
+                'rider_id' => 5,
                 'ride_date' => '2024-07-03 10:00:00',
                 'pickup_location' => '234 Elm St',
                 'dropoff_location' => '567 Cedar St',
@@ -341,7 +341,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => 11,
-                'rider_id' => 4,
+                'rider_id' => 6,
                 'ride_date' => '2024-07-04 11:00:00',
                 'pickup_location' => '890 Spruce St',
                 'dropoff_location' => '123 Birch St',
@@ -352,7 +352,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => 12,
-                'rider_id' => 5,
+                'rider_id' => 7,
                 'ride_date' => '2024-07-05 12:00:00',
                 'pickup_location' => '456 Walnut St',
                 'dropoff_location' => '789 Chestnut St',
@@ -363,7 +363,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => 13,
-                'rider_id' => 6,
+                'rider_id' => 7,
                 'ride_date' => '2024-07-06 13:00:00',
                 'pickup_location' => '101 Ash St',
                 'dropoff_location' => '234 Cypress St',
@@ -385,7 +385,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => 15,
-                'rider_id' => 4,
+                'rider_id' => 8,
                 'ride_date' => '2024-07-08 15:00:00',
                 'pickup_location' => '123 Dogwood St',
                 'dropoff_location' => '456 Fir St',
@@ -396,7 +396,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => 9,
-                'rider_id' => 1,
+                'rider_id' => 3,
                 'ride_date' => '2024-07-09 16:00:00',
                 'pickup_location' => '789 Hickory St',
                 'dropoff_location' => '101 Holly St',
@@ -407,7 +407,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => 10,
-                'rider_id' => 5,
+                'rider_id' => 3,
                 'ride_date' => '2024-07-10 17:00:00',
                 'pickup_location' => '234 Ivy St',
                 'dropoff_location' => '567 Juniper St',
