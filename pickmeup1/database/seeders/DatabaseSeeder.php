@@ -52,7 +52,7 @@ class DatabaseSeeder extends Seeder
         // Added separate file for users
         DB::table('users')->insert([
             [
-                'role_id' => 1,
+                'role_id' => User::ROLE_SUPERADMIN,
                 'first_name' => 'Superadmin',
                 'last_name' => 'Superadmin',
                 'gender' => 'Male',
@@ -66,7 +66,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'role_id' => 2,
+                'role_id' => User::ROLE_ADMIN,
                 'first_name' => 'Admin',
                 'last_name' => 'Admin',
                 'gender' => 'Male',
@@ -80,7 +80,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'role_id' => 3,
+                'role_id' => User::ROLE_RIDER,
                 'first_name' => 'Aladdin',
                 'last_name' => 'Buwanding',
                 'gender' => 'Male',
@@ -94,7 +94,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'role_id' => 3,
+                'role_id' => User::ROLE_RIDER,
                 'first_name' => 'Raphael',
                 'last_name' => 'Alingig',
                 'gender' => 'Male',
@@ -108,7 +108,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'role_id' => 3,
+                'role_id' => User::ROLE_RIDER,
                 'first_name' => 'Rider2',
                 'last_name' => 'Yamaha',
                 'gender' => 'Male',
@@ -122,7 +122,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'role_id' => 3,
+                'role_id' => User::ROLE_RIDER,
                 'first_name' => 'Rider3',
                 'last_name' => 'Toyota',
                 'gender' => 'Male',
@@ -136,7 +136,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'role_id' => 3,
+                'role_id' => User::ROLE_RIDER,
                 'first_name' => 'John',
                 'last_name' => 'Ratunil',
                 'gender' => 'Male',
@@ -150,7 +150,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'role_id' => 3,
+                'role_id' => User::ROLE_RIDER,
                 'first_name' => 'Ray',
                 'last_name' => 'Ibarra',
                 'gender' => 'Male',
@@ -164,7 +164,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'role_id' => 4,
+                'role_id' => User::ROLE_CUSTOMER,
                 'first_name' => 'Customer',
                 'last_name' => '1',
                 'gender' => 'Male',
@@ -178,7 +178,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'role_id' => 4,
+                'role_id' => User::ROLE_CUSTOMER,
                 'first_name' => 'Thad',
                 'last_name' => 'Huber',
                 'gender' => 'Male',
@@ -192,7 +192,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'role_id' => 4,
+                'role_id' => User::ROLE_CUSTOMER,
                 'first_name' => 'Bethany',
                 'last_name' => 'Marquez',
                 'gender' => 'Female',
@@ -206,7 +206,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'role_id' => 4,
+                'role_id' => User::ROLE_CUSTOMER,
                 'first_name' => 'Erin',
                 'last_name' => 'Flower',
                 'gender' => 'Male',
@@ -220,7 +220,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'role_id' => 4,
+                'role_id' => User::ROLE_CUSTOMER,
                 'first_name' => 'Gil',
                 'last_name' => 'Vincent',
                 'gender' => 'Male',
@@ -234,7 +234,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'role_id' => 4,
+                'role_id' => User::ROLE_CUSTOMER,
                 'first_name' => 'Jayne',
                 'last_name' => 'Olvier',
                 'gender' => 'Female',
@@ -248,7 +248,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'role_id' => 4,
+                'role_id' => User::ROLE_CUSTOMER,
                 'first_name' => 'Sony',
                 'last_name' => 'Ali',
                 'gender' => 'Male',
@@ -262,7 +262,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'role_id' => 4,
+                'role_id' => User::ROLE_CUSTOMER,
                 'first_name' => 'Tracy',
                 'last_name' => 'Moreno',
                 'gender' => 'Female',
@@ -276,7 +276,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'role_id' => 4,
+                'role_id' => User::ROLE_CUSTOMER,
                 'first_name' => 'Customer',
                 'last_name' => '4',
                 'gender' => 'Male',
@@ -297,7 +297,7 @@ class DatabaseSeeder extends Seeder
             foreach ($riders as $rider) {
                 Rider::create([
                     'user_id' => $rider->user_id,
-                    'registration_date' => now(),
+                    'registration_date' => $rider->created_at,
                     'verification_status' => 'Pending', 
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -476,6 +476,58 @@ class DatabaseSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]
+        ]);
+
+        DB::table('requirements')->insert([
+            [
+                'title' => 'Motorcycle Picture',
+                'description' => 'Image of the Motorcycle Model',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'ROCR',
+                'description' => 'Image of ROCR',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'COR',
+                'description' => 'Image of the Certificate of Registration',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'Drivers License',
+                'description' => 'Image of the Drivers License',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'TPL Insurance',
+                'description' => 'Image of the TPL Insurance',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'Barangay Clearance',
+                'description' => 'Image of the Barangay Clearance',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'Police Clearance',
+                'description' => 'Image of the Police Clearance',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'Plate Number',
+                'description' => 'Image of the Plate Number',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
         ]);
 
 

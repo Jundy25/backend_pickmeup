@@ -38,6 +38,10 @@ class User extends Authenticatable
         ];
     }
 
+    protected $casts = [
+        'date_of_birth' => 'date',
+    ];
+
     public function role()
     {
         return $this->belongsTo(Role::class, 'role_id', 'role_id');
@@ -73,18 +77,5 @@ class User extends Authenticatable
         return $this->morphMany(Feedback::class, 'recipient');
     }
 
-    public function activityLogs()
-    {
-        return $this->hasMany(ActivityLog::class, 'user_id', 'user_id');
-    }
-
-    public function sentActivities()
-    {
-        return $this->morphMany(ActivityLog::class, 'sender');
-    }
-
-    public function receivedActivities()
-    {
-        return $this->morphMany(ActivityLog::class, 'recipient');
-    }
+   
 }

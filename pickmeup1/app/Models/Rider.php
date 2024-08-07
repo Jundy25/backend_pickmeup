@@ -17,6 +17,15 @@ class Rider extends Model
         'verification_status',
     ];
 
+    protected static function booted()
+    {
+        static::creating(function ($rider) {
+            if (!$rider->registration_date) {
+                $rider->registration_date = $rider->user->created_at;
+            }
+        });
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'user_id');

@@ -65,10 +65,25 @@ class AuthController extends Authenticatable
     }
 
 
-    /**
-     *  PATCH /api/user/me
-     * Store a newly created resource in storage.
-     */
+    public function loginAccountMobile(Request $request)
+    {
+        try {
+            $credentials = $request->only(['user_name', 'password']);
+    
+            if (!Auth::attempt($credentials)) {
+                return response(['message' => "Invalid username or password"], 401);
+            }
+    
+            $user = $request->user();
+            $token = $user->createToken('Personal Access Token')->plainTextToken;
+            
+            return response(['token' => $token, 'role' => $user->role_id], 200);
+        } catch (\Throwable $th) {
+            return response(['message' => $th->getMessage()], 400);
+        }
+    }
+
+
 
      public function accountUpdate(UpdateUserRequest $request, User $user)
     {
@@ -98,9 +113,12 @@ class AuthController extends Authenticatable
             $this->model->create($request->all());
             return response(['message' => "Successfully created"], 201);
         } catch (\Throwable $e) {
+            // Log the error message to understand what's going wrong
+            \Log::error('User creation failed: ' . $e->getMessage());
             return response(['message' => $e->getMessage()], 400);
         }
     }
+
 
 
     public function logoutAccount(Request $request) {
