@@ -33,4 +33,18 @@ class UserStoreRequest extends FormRequest
             'mobile_number'=> 'required|string'
         ];
     }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'email.unique' => 'The email address is already in use.',
+            'user_name.unique' => 'The username is already taken.',
+            // Add other custom messages if needed
+        ];
+    }
 }

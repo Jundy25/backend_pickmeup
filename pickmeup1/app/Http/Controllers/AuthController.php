@@ -108,16 +108,16 @@ class AuthController extends Authenticatable
     // /api/user/signup
     // Create Account function
     public function createAccount(UserStoreRequest $request)
-    {
-        try {
-            $this->model->create($request->all());
-            return response(['message' => "Successfully created"], 201);
-        } catch (\Throwable $e) {
-            // Log the error message to understand what's going wrong
-            \Log::error('User creation failed: ' . $e->getMessage());
-            return response(['message' => $e->getMessage()], 400);
-        }
+{
+    try {
+        $this->model->create($request->all());
+        return response(['message' => "Successfully created"], 201);
+    } catch (\Throwable $e) {
+        // Log the error message to understand what's going wrong
+        \Log::error('User creation failed: ' . $e->getMessage());
+        return response(['errors' => $e->getMessage()], 400);
     }
+}
 
 
 

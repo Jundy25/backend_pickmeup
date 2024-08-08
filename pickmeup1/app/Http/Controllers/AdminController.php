@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Models\RideHistory;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateUserRequest;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
@@ -42,51 +44,81 @@ class AdminController extends Controller
     }
 
 
-    public function update(Request $request, $user_id)
+    public function updateAdmin(Request $request, $id)
     {
-        $admin = User::find($user_id);
+        // Retrieve the current admin data to compare with the new input
+        $admin = User::findOrFail($id);
 
-        if ($admin && $admin->role_id == 2) {
-            $validatedData = $request->validate([
-                'first_name' => 'required|string|max:255',
-                'last_name' => 'required|string|max:255',
-                'user_name' => 'required|string|max:255|unique:users,user_name,' . $admin->id,
-                'email' => 'required|string|email|max:255|unique:users,email,' . $admin->id,
-                'password' => 'nullable|string|min:8|confirmed',
-                'gender' => 'required|string',
-                'date_of_birth' => 'required|date',
-                'mobile_number' => 'required|string|max:20',
-            ]);
+        // Define base validation rules
+        $rules = [
+            'user_name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'gender' => 'required|string|in:Male,Female',
+            'date_of_birth' => 'required|date',
+            'email' => 'required|email|max:255',
+            'mobile_number' => 'required|string|max:15',
+        ];
 
-            $admin->first_name = $validatedData['first_name'];
-            $admin->last_name = $validatedData['last_name'];
-            $admin->user_name = $validatedData['user_name'];
-            $admin->email = $validatedData['email'];
-            if (!empty($validatedData['password'])) {
-                $admin->password = Hash::make($validatedData['password']);
-            }
-            $admin->gender = $validatedData['gender'];
-            $admin->date_of_birth = $validatedData['date_of_birth'];
-            $admin->mobile_number = $validatedData['mobile_number'];
-            $admin->save();
-
-            return response()->json($admin);
+        // Apply unique validation only if the username or email has changed
+        if ($request->input('user_name') !== $admin->user_name) {
+            $rules['user_name'] = 'required|string|max:255|unique:users,user_name';
+        }
+        
+        if ($request->input('email') !== $admin->email) {
+            $rules['email'] = 'required|email|max:255|unique:users,email';
         }
 
-        return response()->json(['message' => 'Admin not found'], 404);
+        // Define custom messages
+        $messages = [
+            'user_name.unique' => 'The username is already taken.',
+            'email.unique' => 'The email is already in use.',
+        ];
+
+        // Validate the request data
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            // Update the admin user data
+            $admin->user_name = $request->input('user_name');
+            $admin->first_name = $request->input('first_name');
+            $admin->last_name = $request->input('last_name');
+            $admin->gender = $request->input('gender');
+            $admin->date_of_birth = $request->input('date_of_birth');
+            $admin->email = $request->input('email');
+            $admin->mobile_number = $request->input('mobile_number');
+
+            // Save the updated data
+            $admin->save();
+
+            return response(['message' => 'Admin updated successfully', 'admin' => $admin], 200);
+        } catch (\Exception $e) {
+            \Log::error('Error updating admin: ' . $e->getMessage());
+            return response(['message' => 'Error updating admin', 'error' => $e->getMessage()], 500);
+        }
     }
 
 
-    public function accountUpdate(UpdateUserRequest $request, User $user)
+    public function accountUpdate(UpdateUserRequest $request, User $editingAdminId)
     {
         try {
-            $userDetails = $user->find($request->user()->user_id);
+            $userDetails = User::find($editingAdminId);
 
-            if (! $userDetails) {
+            if (!$userDetails) {
                 return response(["message" => "User not found"], 404);
             }
 
-            $userDetails->update($request->validated());
+            // Exclude null or empty password from the update
+            $data = $request->validated();
+            if (empty($data['password'])) {
+                unset($data['password']);
+            }
+
+            $userDetails->update($data);
 
             return response(["message" => "User Successfully Updated"], 200);
         } catch (\Throwable $th) {
