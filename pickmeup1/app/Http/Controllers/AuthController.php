@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Confirmation;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\LoginRequest;
@@ -115,6 +116,7 @@ class AuthController extends Authenticatable
     // Create Account function
     public function createAccount(UserStoreRequest $request)
 {
+    $credentials = $request->only(['email', 'mobile_number']);
     try {
         $this->model->create($request->all());
         return response(['message' => "Successfully created"], 201);
@@ -145,9 +147,15 @@ class AuthController extends Authenticatable
         return response()->json($request->user(), 200);
     }
 
-    public function text(Request $request){
-        $phonenum ;
-        $message ;
+    public function text(Request $credentials){
+        $phonenum = $credentials->only(['mobile_number']);
+        $email = $credentials->only(['email']);
+        
+         // Generate a random 4-digit number
+        $randomNumber = rand(1000, 9999);
+
+        // Create the message using the random number
+        $message = "Your OTP code is: " . $randomNumber;
         $apiURL = "8gprrd.api.infobip.com";
         $apiKey = "2db44b4c40f78de1ca10449c921a1e48-2d77bd07-7047-4cbe-9ac0-54520fec118e";
 
@@ -164,5 +172,20 @@ class AuthController extends Authenticatable
 
         $requests = new SmsAdvancedTextualRequest(messages: [$themessage]);
         $response = $api->sendSmsMessage($requests);
+
+
+        try{
+            $otp = Confirmation::create([
+            'email' => $email,
+            'mobile_number' => $phonenum,
+            'otp' => $randomNumber,
+            'status' => "pending",
+            
+        ]);
+        return response(['message' => 'Otp added successfully', 'otp' => $otp], 201);
+        }catch (\Throwable $e) {
+            return response(['errors' => $e->getMessage()], 400);
+        }
+            
     }
 }
