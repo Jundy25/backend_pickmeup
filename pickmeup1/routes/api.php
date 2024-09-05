@@ -18,6 +18,7 @@ Route::prefix('/user')->group(function() {
     Route::post('/login', [AuthController::class, 'loginAccount']);
     Route::post('/loginMob', [AuthController::class, 'loginAccountMobile']);
     Route::post('/signup', [AuthController::class, 'createAccount']);
+    Route::post('/confirm', [AuthController::class, 'text']);
     Route::patch('/me', [AuthController::class, 'accountUpdate'])->middleware(['auth:sanctum']);
     Route::post('/logout', [AuthController::class, 'logoutAccount'])->middleware(['auth:sanctum']);
     Route::get('/rider', [AuthController::class, 'showRider']);
