@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('user_name')->unique();
             $table->string('password');
             $table->string('mobile_number', 11)->nullable();
-            $table->string('status')->default('Active');
+            $table->string('status')->default('Disabled');
             $table->timestamps();
             $table->foreign('role_id')->references('role_id')->on('roles')->onDelete('restrict')->onUpdate('cascade');
         });

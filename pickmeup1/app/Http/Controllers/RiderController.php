@@ -13,7 +13,7 @@ class RiderController extends Controller
     {
         $riders = User::where('role_id', User::ROLE_RIDER)
             ->with('rider:verification_status,user_id')
-            ->get(['user_id', 'first_name', 'last_name', 'mobile_number', 'status', 'user_id']);
+            ->get(['user_id', 'first_name', 'last_name', 'mobile_number', 'status', 'user_id', 'email', 'date_of_birth']);
 
         return response()->json($riders);
     }
