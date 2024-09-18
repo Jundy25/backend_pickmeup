@@ -41,22 +41,4 @@ class Rider extends Model
         return $this->hasMany(RideHistory::class, 'rider_id', 'rider_id');
     }
 
-    public function sentActivities()
-    {
-        return $this->morphMany(ActivityLog::class, 'sender');
-    }
-
-    public function receivedActivities()
-    {
-        return $this->morphMany(ActivityLog::class, 'recipient');
-    }
-
-    public function updateUserStatus()
-{
-    if ($this->verification_status === 'verified') {
-        $this->user()->update(['status' => 'Active']);
-    } else {
-        $this->user()->update(['status' => 'Inactive']);
-    }
-}
 }

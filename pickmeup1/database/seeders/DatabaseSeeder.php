@@ -492,6 +492,12 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'title' => 'OR Expiration Date',
+                'description' => 'OR Expiration Date',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
                 'title' => 'COR',
                 'description' => 'Image of the Certificate of Registration',
                 'created_at' => now(),
@@ -500,6 +506,18 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => 'Drivers License',
                 'description' => 'Image of the Drivers License',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'Drivers License Number',
+                'description' => 'Drivers License Number',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'License Expiration Date',
+                'description' => 'Drivers License Expiration Date',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -513,7 +531,7 @@ class DatabaseSeeder extends Seeder
                 'title' => 'Barangay Clearance',
                 'description' => 'Image of the Barangay Clearance',
                 'created_at' => now(),
-                'updated_at' => now(),
+                'updated_at' => now(), 
             ],
             [
                 'title' => 'Police Clearance',

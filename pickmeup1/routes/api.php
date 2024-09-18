@@ -19,12 +19,24 @@ Route::prefix('/user')->group(function() {
     Route::post('/loginMob', [AuthController::class, 'loginAccountMobile']);
     Route::post('/signup', [AuthController::class, 'createAccount']);
     Route::post('/confirm', [AuthController::class, 'text']);
+
+
+    
+    Route::post('/send-otp', [AuthController::class, 'sendOtp']);
+
+    // Route to verify OTP
+    Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
+
+
     Route::patch('/me', [AuthController::class, 'accountUpdate'])->middleware(['auth:sanctum']);
     Route::post('/logout', [AuthController::class, 'logoutAccount'])->middleware(['auth:sanctum']);
+
     Route::get('/rider', [AuthController::class, 'showRider']);
+    
     Route::get('/customer', [AuthController::class, 'showCustomer']);
     Route::get('/dashboard/counts', [DashboardController::class, 'getCounts']);
     Route::get('/riders', [RiderController::class, 'getRiders']);
+    Route::get('/riders_req', [RiderController::class, 'getRidersRequirements']);
     Route::put('rider/{user_id}/status', [CustomerController::class, 'updateStatus']);
 
     Route::get('/customers', [CustomerController::class, 'getCustomers']);

@@ -114,18 +114,18 @@ class AuthController extends Authenticatable
 
     // /api/user/signup
     // Create Account function
-    public function createAccount(UserStoreRequest $request)
-{
-    $credentials = $request->only(['email', 'mobile_number']);
-    try {
-        $this->model->create($request->all());
-        return response(['message' => "Successfully created"], 201);
-    } catch (\Throwable $e) {
-        // Log the error message to understand what's going wrong
-        \Log::error('User creation failed: ' . $e->getMessage());
-        return response(['errors' => $e->getMessage()], 400);
-    }
-}
+
+    // public function createAccount(UserStoreRequest $request)
+    // {
+    //     try {
+    //         $this->model->create($request->all());
+    //         return response(['message' => "Successfully created"], 201);
+    //     } catch (\Throwable $e) {
+    //         // Log the error message to understand what's going wrong
+    //         \Log::error('User creation failed: ' . $e->getMessage());
+    //         return response(['errors' => $e->getMessage()], 400);
+    //     }
+    // }
 
 
 
@@ -147,17 +147,17 @@ class AuthController extends Authenticatable
         return response()->json($request->user(), 200);
     }
 
-    public function text(Request $credentials){
-        $phonenum = $credentials->only(['mobile_number']);
-        $email = $credentials->only(['email']);
+    public function text(UserStoreRequest $request){
+        $phonenum = $request->only(['mobile_number']);
+        $email = $request->only(['email']);
         
          // Generate a random 4-digit number
         $randomNumber = rand(1000, 9999);
 
         // Create the message using the random number
-        $message = "Your OTP code is: " . $randomNumber;
-        $apiURL = "8gprrd.api.infobip.com";
-        $apiKey = "2db44b4c40f78de1ca10449c921a1e48-2d77bd07-7047-4cbe-9ac0-54520fec118e";
+        $message = "Hi! Your OTP code is: " . $randomNumber. "You can use this to verify your mobile number to use Picke Me Up services. If you did not iniate this request, please ignore this message";
+        $apiURL = "m321m6.api.infobip.com";
+        $apiKey = "dd03aa5a4305d1ef6693a372a405d9ae-27b5b608-0bc7-45fb-befe-2e4700aae12c";
 
 
         $configuration = new Configuration(host: $apiURL, apiKey: $apiKey);
@@ -188,4 +188,103 @@ class AuthController extends Authenticatable
         }
             
     }
+
+
+
+
+    public function sendOtp(UserStoreRequest $request)
+{
+    $phonenum = $request->mobile_number;
+
+    // Generate a random 4-digit number
+    $randomNumber = rand(1000, 9999);
+
+    // Create the message using the random number
+    $message = "Hi! Your OTP code is: " . $randomNumber . " You can use this to verify your mobile number to use Pick Me Up services. If you did not initiated this request, please ignore this message.";
+    
+    // Infobip API configuration (adjust this to your setup)
+    $apiURL = "m321m6.api.infobip.com";
+    $apiKey = "dd03aa5a4305d1ef6693a372a405d9ae-27b5b608-0bc7-45fb-befe-2e4700aae12c";
+
+    $configuration = new Configuration(host: $apiURL, apiKey: $apiKey);
+    $api = new SmsApi(config: $configuration);
+
+    $destination = new SmsDestination(to: $phonenum);
+    $themessage = new SmsTextualMessage(
+        destinations: [$destination],
+        text: $message,
+        from: "Syntax Flow"
+    );
+
+    $requests = new SmsAdvancedTextualRequest(messages: [$themessage]);
+
+    try {
+        $response = $api->sendSmsMessage($requests);
+        // Store OTP in database
+        Confirmation::create([
+            'email' => $request->email,
+            'mobile_number' => $phonenum,
+            'otp' => $randomNumber,
+            'status' => "pending",
+        ]);
+
+        return response(['message' => 'OTP sent successfully.'], 201);
+    } catch (\Throwable $e) {
+        return response(['errors' => $e->getMessage()], 400);
+    }
+}
+
+// 
+
+
+// Add this method to your AuthController
+
+public function verifyOtp(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'mobile_number' => 'required',
+        'otp' => 'required|numeric'
+    ]);
+
+    // Check if OTP exists and is pending
+    $confirmation = Confirmation::where('email', $request->email)
+                                ->where('mobile_number', $request->mobile_number)
+                                ->where('otp', $request->otp)
+                                ->where('status', 'pending')
+                                ->first();
+
+    if (!$confirmation) {
+        return response(['message' => 'Invalid OTP or OTP expired'], 400);
+    }
+
+    // Mark OTP as used
+    $confirmation->status = 'verified';
+    $confirmation->save();
+
+    return response(['message' => 'OTP verified successfully'], 200);
+}
+
+public function createUser(UserStoreRequest $request)
+{
+    // Create the user only if OTP is verified
+    $confirmation = Confirmation::where('email', $request->email)
+                                ->where('mobile_number', $request->mobile_number)
+                                ->where('status', 'verified')
+                                ->first();
+
+    if (!$confirmation) {
+        return response(['message' => 'Please verify your OTP before creating an account'], 400);
+    }
+
+    try {
+        User::create($request->all());
+        return response(['message' => "Successfully created"], 201);
+    } catch (\Throwable $e) {
+        \Log::error('User creation failed: ' . $e->getMessage());
+        return response(['errors' => $e->getMessage()], 400);
+    }
+}
+
+
 }
