@@ -6,6 +6,9 @@ use App\Models\User;
 use App\Models\RideHistory;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 class CustomerController extends Controller
 {
     public function getCustomers()
@@ -29,5 +32,71 @@ class CustomerController extends Controller
             'user' => $user
         ]);
     }
+
+
+    public function book(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,user_id',
+            'pickup_location' => 'required|string|max:255',
+            'dropoff_location' => 'required|string|max:255',
+            'fare' => 'required|numeric',
+            'ride_type' => 'required',
+        ]);
+
+        $rideHistory = new RideHistory();
+        $rideHistory->user_id = $validated['user_id'];
+        $rideHistory->pickup_location = $validated['pickup_location'];
+        $rideHistory->dropoff_location = $validated['dropoff_location'];
+        $rideHistory->fare = $validated['fare'];
+        $rideHistory->ride_date = now();
+        $rideHistory->ride_type = $validated['ride_type'];
+        $rideHistory->status = 'Available';
+        $rideHistory->save();
+
+        return response()->json(['success' => true, 'ride_id' => $rideHistory->ride_id], 201);
+    }
+
+
+
+    public function checkActiveRide($user_id)
+    {
+        $activeRide = RideHistory::where('user_id', $user_id)
+            ->whereIn('status', ['Available', 'Occupied', 'In Transit'])
+            ->with(['user', 'rider'])
+            ->latest()
+            ->first();
+
+        return response()->json([
+            'hasActiveRide' => $activeRide !== null,
+            'rideDetails' => $activeRide
+        ]);
+    }
+    
+
+    public function cancelRide(Request $request, $ride_id)
+    {
+        $ride = RideHistory::find($ride_id);
+    
+        if (!$ride || $ride->status == 'Canceled') {
+            return response()->json(['error' => 'This ride is no longer available or cannot be canceled'], 400);
+        }
+    
+        // Logic to cancel the ride
+        $ride->status = 'Canceled';
+        $ride->save();
+    
+        return response()->json(['message' => 'Ride successfully canceled']);
+    }
+
+    public function history($user_id)
+    {
+        $rideHistories = RideHistory::where('user_id', $user_id)
+            ->with(['user', 'rider'])
+            ->get();
+        return response()->json($rideHistories);
+    }
+    
+
 
 }

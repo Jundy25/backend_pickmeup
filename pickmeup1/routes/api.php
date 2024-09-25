@@ -37,10 +37,21 @@ Route::prefix('/user')->group(function() {
     Route::get('/dashboard/counts', [DashboardController::class, 'getCounts']);
     Route::get('/riders', [RiderController::class, 'getRiders']);
     Route::get('/riders_req', [RiderController::class, 'getRidersRequirements']);
+    route::post('/upload', [RiderController::class, 'upload']);
     Route::put('rider/{user_id}/status', [CustomerController::class, 'updateStatus']);
+    Route::get('/available-rides', [RiderController::class, 'getAvailableRides']);
+    Route::put('/accept_ride/{ride_id}', [RiderController::class, 'accept_ride']);
+    Route::get('check-active-ride/{user_id}', [RiderController::class, 'checkActiveRide']);
+    Route::put('/finish_ride/{ride_id}', [RiderController::class, 'finish_ride']);
 
     Route::get('/customers', [CustomerController::class, 'getCustomers']);
     Route::put('customer/{user_id}/status', [CustomerController::class, 'updateStatus']);
+    Route::post('/book', [CustomerController::class, 'book']);
+    Route::get('check-existing-booking/{user_id}', [CustomerController::class, 'checkActiveRide']);
+    Route::get('latest-available/{user_id}', [CustomerController::class, 'getLatestAvailableRide']);
+    Route::get('latest-available2/{user_id}', [CustomerController::class, 'getLatestAvailableRide2']);
+    Route::put('cancel_ride/{ride_id}', [CustomerController::class, 'cancelRide']);
+    Route::get('history/{user_id}', [CustomerController::class, 'history']);
 
     Route::get('/admin', [AdminController::class, 'getAdmin']);
     Route::get('/admin/{id}', [AdminController::class, 'show']);

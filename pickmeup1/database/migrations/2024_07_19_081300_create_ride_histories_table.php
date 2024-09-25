@@ -11,8 +11,9 @@ class CreateRideHistoriesTable extends Migration
         Schema::create('ride_histories', function (Blueprint $table) {
             $table->id('ride_id');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('rider_id');
+            $table->unsignedBigInteger('rider_id')->nullable();
             $table->dateTime('ride_date');
+            $table->string('ride_type');
             $table->string('pickup_location');
             $table->string('dropoff_location');
             $table->decimal('fare', 8, 2);

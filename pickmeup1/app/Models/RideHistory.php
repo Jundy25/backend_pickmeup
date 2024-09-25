@@ -20,6 +20,7 @@ class RideHistory extends Model
         'fare',
         'status',
     ];
+    
 
     public function user()
     {

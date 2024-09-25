@@ -54,22 +54,25 @@ class AuthController extends Authenticatable
     public function loginAccount(LoginRequest $request)
     {
         try {
-
             $credentials = $request->only(['email', 'password']);
-    
-            
+
             if (!Auth::attempt($credentials)) {
                 return response(['message' => "Account doesn't exist"], 404);
             }
 
             $user = $request->user();
-            $token = $request->user()->createToken('Personal Access Token')->plainTextToken;
+            $token = $user->createToken('Personal Access Token')->plainTextToken;
             
-            return response(['token' => $token, 'role' => $request->user()->role_id], 200);
+            return response([
+                'token' => $token,
+                'role' => $user->role_id,
+                'user_id' => $user->user_id  // Include the user_id in the response
+            ], 200);
         } catch (\Throwable $th) {
             return response(['message' => $th->getMessage()], 400);
         }
     }
+
 
 
     public function loginAccountMobile(Request $request)
@@ -84,7 +87,11 @@ class AuthController extends Authenticatable
             $user = $request->user();
             $token = $user->createToken('Personal Access Token')->plainTextToken;
             
-            return response(['token' => $token, 'role' => $user->role_id], 200);
+            return response([
+                'token' => $token,
+                'role' => $user->role_id,
+                'user_id' => $user->user_id  // Include the user_id in the response
+            ], 200);
         } catch (\Throwable $th) {
             return response(['message' => $th->getMessage()], 400);
         }
