@@ -496,8 +496,8 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'title' => 'ROCR',
-                'description' => 'Image of ROCR',
+                'title' => 'ORCR',
+                'description' => 'Image of ORCR',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -551,7 +551,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'title' => 'Plate Number',
-                'description' => 'Image of the Plate Number',
+                'description' => 'Plate Number',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

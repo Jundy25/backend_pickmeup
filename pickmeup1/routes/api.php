@@ -37,11 +37,16 @@ Route::prefix('/user')->group(function() {
     Route::get('/dashboard/counts', [DashboardController::class, 'getCounts']);
     Route::get('/riders', [RiderController::class, 'getRiders']);
     Route::get('/riders_req', [RiderController::class, 'getRidersRequirements']);
-    route::post('/upload', [RiderController::class, 'upload']);
+
+    Route::post('/upload', [RiderController::class, 'upload'])->middleware('auth:sanctum');
+    Route::post('/update-rider-info', [RiderController::class, 'updateRiderInfo'])->middleware('auth:sanctum');
+    Route::get('/requirement_photos/{rider_id}', [RiderController::class, 'getUploadedImages']);
+
     Route::put('rider/{user_id}/status', [CustomerController::class, 'updateStatus']);
     Route::get('/available-rides', [RiderController::class, 'getAvailableRides']);
     Route::put('/accept_ride/{ride_id}', [RiderController::class, 'accept_ride']);
     Route::get('check-active-ride/{user_id}', [RiderController::class, 'checkActiveRide']);
+    Route::put('/start_ride/{ride_id}', [RiderController::class, 'start_ride']);
     Route::put('/finish_ride/{ride_id}', [RiderController::class, 'finish_ride']);
 
     Route::get('/customers', [CustomerController::class, 'getCustomers']);

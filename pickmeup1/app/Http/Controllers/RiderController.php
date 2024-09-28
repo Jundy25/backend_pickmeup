@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
 
 
 class RiderController extends Controller
@@ -42,29 +45,198 @@ class RiderController extends Controller
         return response()->json($riders);
     }
 
+    // public function upload(Request $request)
+    // {
+    //     $rider = Rider::where('user_id', $user_id);
+
+
+    //     // Validate the request data
+    //     $validated = $request->validate([
+    //         'requirement_id' => 'required|exists:requirements,id',
+    //         'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    //     ]);
+
+    //     // Store the file in the storage
+    //     $path = $request->file('photo')->store('public/requirement_photos');
+
+    //     // Save file path in the database
+    //     $requirementPhoto = RequirementPhoto::create([
+    //         'rider_id' => $rider->rider_id,
+    //         'requirement_id' => $validated['requirement_id'],
+    //         'photo_url' => Storage::url($path),
+    //     ]);
+
+    //     return response()->json(['success' => true, 'file' => $requirementPhoto]);
+    // }
+
+
     public function upload(Request $request)
     {
-        $ride = Rider::where('user_id', $user_id);
+        try {
+            // Validate input
+            $request->validate([
+                'requirement_id' => 'required|integer',
+                'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+                'user_id' => 'required|integer',
+            ]);
+    
+            $rider = Rider::where('user_id', $request->input('user_id'))->first();
+    
+            // Check if the rider exists
+            if (!$rider) {
+                return response()->json(['success' => false, 'message' => 'Rider not found.'], 404);
+            }
+    
+            // Handle file upload
+            if ($request->hasFile('photo')) {
+                $photoPath = $request->file('photo')->store('verification_documents', 'public');
+    
+                // Check for existing photo record
+                $requirementPhoto = RequirementPhoto::where('requirement_id', $request->input('requirement_id'))
+                                                     ->where('rider_id', $rider->rider_id)
+                                                     ->first();
+    
+                if ($requirementPhoto) {
+                    // Delete the existing image file
+                    if ($requirementPhoto->photo_url) {
+                        Storage::disk('public')->delete($requirementPhoto->photo_url);
+                    }
+    
+                    // Update existing record
+                    $requirementPhoto->photo_url = $photoPath;
+                    $requirementPhoto->save();
+                } else {
+                    // Create a new record
+                    RequirementPhoto::create([
+                        'requirement_id' => $request->input('requirement_id'),
+                        'photo_url' => asset('storage/' . $photoPath),
+                        'rider_id' => $rider->rider_id,
+                    ]);
+                }
+            }
+    
+            return response()->json(['success' => true, 'message' => 'File uploaded successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'File upload failed.', 'error' => $e->getMessage()]);
+        }
+    }
+    
+    
+
+    public function updateRiderInfo(Request $request)
+    {
+        try {
+            // Validate text data
+            $request->validate([
+                'drivers_license_number' => 'required|string',
+                'license_expiration_date' => 'required|date',
+                'or_expiration_date' => 'required|date',
+                'plate_number' => 'required|string',
+                'user_id' => 'required|integer', // Ensure user_id is included in the request
+            ]);
+
+            \Log::info("Updating rider info for user_id: " . $request->input('user_id'));
+
+            // Retrieve the rider based on user_id
+            $rider = Rider::where('user_id', $request->input('user_id'))->first();
+
+            if (!$rider) {
+                return response()->json(['success' => false, 'message' => 'Rider not found.']);
+            }
+
+            // Prepare data to update or create in requirement_photos table
+            $requirementsData = [
+                6 => $request->input('drivers_license_number'), // For requirement_id 1
+                7 => $request->input('license_expiration_date'), // For requirement_id 2
+                3 => $request->input('or_expiration_date'), // For requirement_id 4
+                11 => $request->input('plate_number'), // For requirement_id 5
+            ];
+
+            foreach ($requirementsData as $requirement_id => $value) {
+                // Check if the requirement photo exists
+                $requirementPhoto = RequirementPhoto::where('rider_id', $rider->rider_id)
+                    ->where('requirement_id', $requirement_id)
+                    ->first();
+
+                if ($requirementPhoto) {
+                    // Update the existing record
+                    $requirementPhoto->update(['text_data' => $value]); // Replace 'text_data' with the actual column name you want to update
+                } else {
+                    // Create a new record if it doesn't exist
+                    RequirementPhoto::create([
+                        'rider_id' => $rider->rider_id,
+                        'requirement_id' => $requirement_id,
+                        'text_data' => $value, // Replace 'text_data' with the actual column name
+                    ]);
+                }
+            }
+
+            return response()->json(['success' => true, 'message' => 'Rider information updated successfully.']);
+        } catch (\Exception $e) {
+            \Log::error("Error updating rider info: " . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Failed to update rider information.', 'error' => $e->getMessage()]);
+        }
+    }
 
 
-        // Validate the request data
-        $validated = $request->validate([
-            'rider_id' => 'required|exists:riders,id',
-            'requirement_id' => 'required|exists:requirements,id',
-            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+    public function getUploadedImages($userId)
+    {
+        try {
+            $rider = Rider::where('user_id', $userId)->first();
+            // Fetch the photos for the given rider ID
+            $photos = RequirementPhoto::where('rider_id', $rider->rider_id)->get();
 
-        // Store the file in the storage
-        $path = $request->file('photo')->store('public/requirement_photos');
+            // Prepare the response data
+            $response = [
+                'license_image_url' => null,
+                'or_cr_image_url' => null,
+                'cor_image_url' => null,
+                'motor_model_image_url' => null,
+                'tpl_insurance_image_url' => null,
+                'brgy_clearance_image_url' => null,
+                'police_clearance_image_url' => null,
+            ];
 
-        // Save file path in the database
-        $requirementPhoto = RequirementPhoto::create([
-            'rider_id' => $validated['rider_id'],
-            'requirement_id' => $validated['requirement_id'],
-            'photo_url' => Storage::url($path),
-        ]);
+            // Map the photos to their respective URLs based on the requirement_id
+            foreach ($photos as $photo) {
+                switch ($photo->requirement_id) {
+                    case 1:
+                        $response['motor_model_image_url'] = asset('storage/' . $photo->photo_url);
+                        break;
+                    case 2:
+                        $response['or_cr_image_url'] = asset('storage/' . $photo->photo_url);
+                        break;
+                    case 4:
+                        $response['cor_image_url'] = asset('storage/' . $photo->photo_url);
+                        break;
+                    case 5:
+                        $response['license_image_url'] = asset('storage/' . $photo->photo_url);
+                        break;
+                    case 8:
+                        $response['tpl_insurance_image_url'] = asset('storage/' . $photo->photo_url);
+                        break;
+                    case 9:
+                        $response['brgy_clearance_image_url'] = asset('storage/' . $photo->photo_url);
+                        break;
+                    case 10:
+                        $response['police_clearance_image_url'] = asset('storage/' . $photo->photo_url);
+                        break;
+                    default:
+                        break;
+                }
+            }
 
-        return response()->json(['success' => true, 'file' => $requirementPhoto]);
+            return response()->json([
+                'success' => true,
+                'data' => $response,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error fetching images: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function updateStatus(Request $request, $id)
@@ -116,7 +288,7 @@ class RiderController extends Controller
                 }
 
                 // Update the ride status and assign the rider_id
-                $ride->status = 'Occupied';
+                $ride->status = 'Booked';
                 $ride->rider_id = $user_id;
                 $ride->save();
 
@@ -144,34 +316,34 @@ class RiderController extends Controller
         ]);
     }
 
+    public function start_ride(Request $request, $ride_id)
+    {
+        $ride = RideHistory::find($ride_id);
+    
+        if (!$ride || $ride->status == 'Canceled') {
+            return response()->json(['error' => 'This ride is no longer available.'], 400);
+        }
+    
+        // Logic to cancel the ride
+        $ride->status = 'In Transit';
+        $ride->save();
+    
+        return response()->json(['message' => 'Ride successfully ended']);
+    }
 
     public function finish_ride(Request $request, $ride_id)
     {
-        Log::info("Attempting to accept ride with ID: " . $ride_id);
-
-        try {
-            return DB::transaction(function () use ($ride_id, $request) {
-                $ride = RideHistory::where('ride_id', $ride_id)
-                                ->where('status', 'In Transit')
-                                ->lockForUpdate()
-                                ->first();
-
-                if (!$ride) {
-                    Log::warning("Ride not available for acceptance: " . $ride_id);
-                    return response()->json(['error' => 'This ride is no longer available.'], 400);
-                }
-
-                // Update the ride status and assign the rider_id
-                $ride->status = 'Completed';
-                $ride->save();
-
-                Log::info("Ride accepted successfully: " . $ride_id);
-                return response()->json(['message' => 'Ride Accepted Successfully.']);
-            });
-        } catch (\Exception $e) {
-            Log::error("Failed to accept ride: " . $e->getMessage());
-            return response()->json(['error' => 'Failed to accept ride. Please try again.'], 500);
+        $ride = RideHistory::find($ride_id);
+    
+        if (!$ride || $ride->status == 'Canceled') {
+            return response()->json(['error' => 'This ride is no longer available.'], 400);
         }
+    
+        // Logic to cancel the ride
+        $ride->status = 'Completed';
+        $ride->save();
+    
+        return response()->json(['message' => 'Ride successfully ended']);
     }
 
 
