@@ -45,29 +45,6 @@ class RiderController extends Controller
         return response()->json($riders);
     }
 
-    // public function upload(Request $request)
-    // {
-    //     $rider = Rider::where('user_id', $user_id);
-
-
-    //     // Validate the request data
-    //     $validated = $request->validate([
-    //         'requirement_id' => 'required|exists:requirements,id',
-    //         'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-    //     ]);
-
-    //     // Store the file in the storage
-    //     $path = $request->file('photo')->store('public/requirement_photos');
-
-    //     // Save file path in the database
-    //     $requirementPhoto = RequirementPhoto::create([
-    //         'rider_id' => $rider->rider_id,
-    //         'requirement_id' => $validated['requirement_id'],
-    //         'photo_url' => Storage::url($path),
-    //     ]);
-
-    //     return response()->json(['success' => true, 'file' => $requirementPhoto]);
-    // }
 
 
     public function upload(Request $request)
@@ -340,7 +317,7 @@ class RiderController extends Controller
         }
     
         // Logic to cancel the ride
-        $ride->status = 'Completed';
+        $ride->status = 'Review';
         $ride->save();
     
         return response()->json(['message' => 'Ride successfully ended']);

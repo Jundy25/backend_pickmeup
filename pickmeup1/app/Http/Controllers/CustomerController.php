@@ -62,7 +62,7 @@ class CustomerController extends Controller
     public function checkActiveRide($user_id)
     {
         $activeRide = RideHistory::where('user_id', $user_id)
-            ->whereIn('status', ['Available', 'Booked', 'In Transit'])
+            ->whereIn('status', ['Available', 'Booked', 'In Transit', 'Review'])
             ->with(['user', 'rider'])
             ->latest()
             ->first();
@@ -88,15 +88,5 @@ class CustomerController extends Controller
     
         return response()->json(['message' => 'Ride successfully canceled']);
     }
-
-    public function history($user_id)
-    {
-        $rideHistories = RideHistory::where('user_id', $user_id)
-            ->with(['user', 'rider'])
-            ->get();
-        return response()->json($rideHistories);
-    }
-    
-
 
 }

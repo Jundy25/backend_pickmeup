@@ -12,4 +12,20 @@ class HistoryController extends Controller
         $rideHistories = RideHistory::with(['user', 'rider'])->get();
         return response()->json($rideHistories);
     }
+
+    public function customerHistory($user_id)
+    {
+        $rideHistories = RideHistory::where('user_id', $user_id)
+            ->with(['user'])
+            ->get();
+        return response()->json($rideHistories);
+    }
+    
+    public function riderHistory($user_id)
+    {
+        $rideHistories = RideHistory::where('rider_id', $user_id)
+            ->with(['user'])
+            ->get();
+        return response()->json($rideHistories);
+    }
 }

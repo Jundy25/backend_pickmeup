@@ -64,6 +64,8 @@ Route::prefix('/user')->group(function() {
     Route::put('/update_admin/{id}', [AdminController::class, 'updateAdmin']);
     
     Route::get('/history', [HistoryController::class, 'index']);
+    Route::get('/cus_history/{user_id}', [HistoryController::class, 'customerHistory']);
+    Route::get('/rider_history/{user_id}', [HistoryController::class, 'riderHistory']);
     Route::get('/feedbacks', [FeedbackController::class, 'index']);
 });
 
