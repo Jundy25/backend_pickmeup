@@ -282,7 +282,7 @@ class RiderController extends Controller
     public function checkActiveRide($user_id)
     {
         $activeRide = RideHistory::where('rider_id', $user_id)
-            ->whereIn('status', ['Occupied', 'In Transit'])
+            ->whereIn('status', ['Booked', 'In Transit'])
             ->with(['user', 'rider'])
             ->latest()
             ->first();

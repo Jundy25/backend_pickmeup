@@ -89,4 +89,19 @@ class CustomerController extends Controller
         return response()->json(['message' => 'Ride successfully canceled']);
     }
 
+    public function finish_ride(Request $request, $ride_id)
+    {
+        $ride = RideHistory::find($ride_id);
+    
+        if (!$ride || $ride->status == 'Canceled') {
+            return response()->json(['error' => 'This ride is no longer available.'], 400);
+        }
+    
+        // Logic to cancel the ride
+        $ride->status = 'Completed';
+        $ride->save();
+    
+        return response()->json(['message' => 'Ride successfully ended']);
+    }
+
 }

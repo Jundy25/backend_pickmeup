@@ -56,7 +56,7 @@ Route::prefix('/user')->group(function() {
     Route::get('latest-available/{user_id}', [CustomerController::class, 'getLatestAvailableRide']);
     Route::get('latest-available2/{user_id}', [CustomerController::class, 'getLatestAvailableRide2']);
     Route::put('cancel_ride/{ride_id}', [CustomerController::class, 'cancelRide']);
-    Route::get('history/{user_id}', [CustomerController::class, 'history']);
+    Route::put('/complete_ride/{ride_id}', [CustomerController::class, 'finish_ride']);
 
     Route::get('/admin', [AdminController::class, 'getAdmin']);
     Route::get('/admin/{id}', [AdminController::class, 'show']);
