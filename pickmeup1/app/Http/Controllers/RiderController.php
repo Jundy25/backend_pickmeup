@@ -86,7 +86,7 @@ class RiderController extends Controller
                     // Create a new record
                     RequirementPhoto::create([
                         'requirement_id' => $request->input('requirement_id'),
-                        'photo_url' => asset('storage/' . $photoPath),
+                        'photo_url' => $photoPath,
                         'rider_id' => $rider->rider_id,
                     ]);
                 }
