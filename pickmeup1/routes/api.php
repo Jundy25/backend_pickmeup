@@ -9,6 +9,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\RideController;
 use App\Models\Sanctum\PersonalAccessToken;
 use Laravel\Sanctum\Sanctum;
 
@@ -67,5 +68,9 @@ Route::prefix('/user')->group(function() {
     Route::get('/cus_history/{user_id}', [HistoryController::class, 'customerHistory']);
     Route::get('/rider_history/{user_id}', [HistoryController::class, 'riderHistory']);
     Route::get('/feedbacks', [FeedbackController::class, 'index']);
+
+    Route::post('/ride-location', [RideController::class, 'saveRideLocation']);
+
+    
 });
 
