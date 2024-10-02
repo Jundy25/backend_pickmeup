@@ -5,18 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ActivityLog extends Model
+class Confirmation extends Model
 {
     use HasFactory;
-
-    protected $primaryKey = 'id';
 
     protected $fillable = [
         'email',
         'mobile_number',
         'otp',
-        'status'
+        'status',
     ];
 
-    
+    public $timestamps = true;  // Ensure timestamps are included if necessary
 }
