@@ -143,7 +143,7 @@ class RiderController extends Controller
                     RequirementPhoto::create([
                         'rider_id' => $rider->rider_id,
                         'requirement_id' => $requirement_id,
-                        'text_data' => $value, // Replace 'text_data' with the actual column name
+                        'photo_url' => $value, // Replace 'text_data' with the actual column name
                     ]);
                 }
             }

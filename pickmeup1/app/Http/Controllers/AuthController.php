@@ -66,7 +66,8 @@ class AuthController extends Authenticatable
             return response([
                 'token' => $token,
                 'role' => $user->role_id,
-                'user_id' => $user->user_id  // Include the user_id in the response
+                'status' => $user->status,
+                'user_id' => $user->user_id
             ], 200);
         } catch (\Throwable $th) {
             return response(['message' => $th->getMessage()], 400);
@@ -90,6 +91,7 @@ class AuthController extends Authenticatable
             return response([
                 'token' => $token,
                 'role' => $user->role_id,
+                'status' => $user->status,
                 'user_id' => $user->user_id  // Include the user_id in the response
             ], 200);
         } catch (\Throwable $th) {
