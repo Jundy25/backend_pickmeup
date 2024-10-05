@@ -31,8 +31,14 @@ class RideHistory extends Model
     {
         return $this->belongsTo(User::class, 'rider_id', 'user_id');
     }
+    
     public function rideLocations()
     {
-        return $this->hasMany(RideLocation::class, 'rider_id', 'rider_id');
+        return $this->hasOne(RideLocation::class, 'ride_id', 'ride_id');
+    }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class, 'ride_id', 'ride_id');
     }
 }

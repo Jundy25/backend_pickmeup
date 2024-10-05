@@ -16,7 +16,7 @@ class UserObserver
             Rider::create([
                 'user_id' => $user->user_id,
                 'registration_date' => $user->created_at,
-                'verification_status' => 'Pending', // or whatever default status you want
+                'verification_status' => 'Unverified', // or whatever default status you want
             ]);
         }
     }

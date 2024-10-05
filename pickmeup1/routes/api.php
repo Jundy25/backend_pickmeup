@@ -69,7 +69,8 @@ Route::prefix('/user')->group(function() {
     Route::get('/rider_history/{user_id}', [HistoryController::class, 'riderHistory']);
     Route::get('/feedbacks', [FeedbackController::class, 'index']);
 
-    Route::post('/ride-location', [RideController::class, 'saveRideLocation']);
+    Route::post('/book-location', [RideController::class, 'saveBookLocation']);
+    Route::post('/rider-location', [RideController::class, 'setRiderLocation']);
 
     
 });

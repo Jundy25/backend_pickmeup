@@ -22,8 +22,8 @@ class RideLocation extends Model
 
     // Relationship to User
 
-    public function rideHistories()
+    public function rideHistory()
     {
-        return $this->belongsTo(RideHistory::class);
+        return $this->belongsTo(RideHistory::class, 'ride_id', 'ride_id');
     }
 }

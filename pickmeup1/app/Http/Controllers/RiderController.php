@@ -235,6 +235,7 @@ class RiderController extends Controller
             ->join('users', 'ride_histories.user_id', '=', 'users.user_id')
             ->select('ride_histories.*', 'users.first_name', 'users.last_name')
             ->orderBy('ride_histories.created_at', 'desc')
+            ->with(['user', 'ridelocations'])
             ->get();
     
         return response()->json($availableRides);
@@ -283,7 +284,7 @@ class RiderController extends Controller
     {
         $activeRide = RideHistory::where('rider_id', $user_id)
             ->whereIn('status', ['Booked', 'In Transit'])
-            ->with(['user', 'rider'])
+            ->with(['user', 'ridelocations'])
             ->latest()
             ->first();
 
