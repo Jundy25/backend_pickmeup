@@ -63,6 +63,7 @@ Route::prefix('/user')->group(function() {
     Route::get('/admin/{id}', [AdminController::class, 'show']);
     Route::put('admin/{user_id}/status', [AdminController::class, 'updateStatus']);
     Route::put('/update_admin/{id}', [AdminController::class, 'updateAdmin']);
+    Route::put('/verify_rider/{user_id}', [AdminController::class, 'verify_rider']);
     
     Route::get('/history', [HistoryController::class, 'index']);
     Route::get('/cus_history/{user_id}', [HistoryController::class, 'customerHistory']);

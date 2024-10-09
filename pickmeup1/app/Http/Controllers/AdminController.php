@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Rider;
 use App\Models\RideHistory;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateUserRequest;
@@ -124,6 +125,22 @@ class AdminController extends Controller
         } catch (\Throwable $th) {
             return response(["message" => $th->getMessage()], 400);
         }
+    }
+
+    public function verify_rider(Request $request, $user_id)
+    {
+        $request->validate([
+            'status' => 'required|in:Verified,Pending',
+        ]);
+
+        $rider = Rider::where('user_id', $user_id)->firstOrFail();
+        $rider->verification_status = $request->status;
+        $rider->save();
+
+        return response()->json([
+            'message' => 'Rider verification status updated successfully',
+            'rider' => $rider
+        ]);
     }
 
 }
