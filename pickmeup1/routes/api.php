@@ -45,6 +45,7 @@ Route::prefix('/user')->group(function() {
 
     Route::put('rider/{user_id}/status', [CustomerController::class, 'updateStatus']);
     Route::get('/available-rides', [RiderController::class, 'getAvailableRides']);
+    Route::get('riderId/{user_id}', [RiderController::class, 'getRiderById']);
     Route::put('/accept_ride/{ride_id}', [RiderController::class, 'accept_ride']);
     Route::get('check-active-ride/{user_id}', [RiderController::class, 'checkActiveRide']);
     Route::put('/start_ride/{ride_id}', [RiderController::class, 'start_ride']);

@@ -33,6 +33,40 @@ class RiderController extends Controller
         return response()->json($riders);
     }
 
+    public function getRiderById($user_id)
+    {
+        // Fetch the user associated with the rider role
+        $user = User::where('role_id', User::ROLE_RIDER)
+            ->where('user_id', $user_id) // Ensure user_id is correct, assuming it's a valid column
+            ->first(); // Fetch a single record
+
+        // Check if the user exists
+        if (!$user) {
+            return response()->json(['message' => 'Rider not found'], 404);
+        }
+
+        // Fetch the rider associated with the user_id
+        $rider = Rider::where('user_id', $user_id)->first();
+
+        // Check if the rider exists
+        if (!$rider) {
+            return response()->json(['message' => 'Rider not found'], 404);
+        }
+
+        // Check if the rider's verification status is "Unverified" or "Pending"
+        if (in_array($rider->verification_status, ['Unverified', 'Pending'])) {
+            return response()->json(['message' => 'Get Verified'], 200);
+        }
+
+        // Check if the user's status is "Disabled"
+        if ($user->status === 'Disabled') {
+            return response()->json(['message' => 'Account Disabled'], 200);
+        }
+
+        // If neither condition is met, return the rider's data
+        return response()->json($rider, 200);
+    }
+
     public function getRidersRequirements()
     {
         // Fetch riders with their related user data and requirement photos
