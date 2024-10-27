@@ -75,5 +75,14 @@ Route::prefix('/user')->group(function() {
     Route::post('/rider-location', [RideController::class, 'setRiderLocation']);
 
     
+
+    // routes/channels.php
+    Broadcast::channel('dashboard', function ($user) {
+        return true; // Modify based on your authentication needs
+    });
+
+    Broadcast::channel('bookings', function ($user) {
+        return true; // Modify based on your authentication needs
+    });
 });
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DashboardUpdated;
 use App\Models\User;
 use App\Models\RideHistory;
 use Illuminate\Http\Request;
@@ -22,11 +23,24 @@ class DashboardController extends Controller
         
         $completedRidesCount = RideHistory::where('status', 'Completed')->count();
 
-        return response()->json([
+        $counts = [
             'active_riders' => $activeRidersCount,
             'disabled_riders' => $disabledRidersCount,
             'customers' => $customersCount,
             'completed_rides' => $completedRidesCount
+        ];
+
+        // Fetch RideHistory records, ordered by latest to oldest
+        $bookings = RideHistory::with(['user', 'rider'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Broadcast the event
+        broadcast(new DashboardUpdated($counts, $bookings));
+
+        return response()->json([
+            'counts' => $counts,
+            'bookings' => $bookings,
         ]);
     }
 }
