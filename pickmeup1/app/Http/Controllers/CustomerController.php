@@ -23,7 +23,7 @@ class CustomerController extends Controller
             'status' => 'required|in:Active,Disabled',
         ]);
 
-        $user = User::findOrFail($user_id); // Ensure the user exists
+        $user = User::findOrFail($user_id);
         $user->status = $request->status;
         $user->save();
 
@@ -31,6 +31,26 @@ class CustomerController extends Controller
             'message' => 'User status updated successfully',
             'user' => $user
         ]);
+    }
+
+    public function getCustomerById($user_id)
+    {
+        $user = User::where('role_id', User::ROLE_CUSTOMER)
+            ->where('user_id', $user_id) // Ensure user_id is correct, assuming it's a valid column
+            ->first(); // Fetch a single record
+
+        // Check if the user exists
+        if (!$user) {
+            return response()->json(['message' => 'Rider not found'], 404);
+        }
+
+        // Check if the user's status is "Disabled"
+        if ($user->status === 'Disabled') {
+            return response()->json(['message' => 'Account Disabled'], 200);
+        }
+
+        // If condition is not met, return the rider's data
+        return response()->json($user, 200);
     }
 
 

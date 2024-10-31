@@ -9,7 +9,9 @@ class HistoryController extends Controller
 {
     public function index()
     {
-        $rideHistories = RideHistory::with(['user', 'rider'])->get();
+        $rideHistories = RideHistory::with(['user', 'rider'])
+            ->orderBy('created_at', 'desc')
+            ->get();
         return response()->json($rideHistories);
     }
 

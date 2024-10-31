@@ -25,7 +25,7 @@ class RiderController extends Controller
                 $query->where('verification_status', 'Verified');
             })
             ->with(['rider:verification_status,user_id,rider_id', 'rider.requirementPhotos' => function($query) {
-                $query->whereIn('requirement_id', [3, 7]) // Assuming 1 is for license and 2 is for OR
+                $query->whereIn('requirement_id', [3, 6]) // Assuming 1 is for license and 2 is for OR
                     ->select('rider_id', 'requirement_id', 'photo_url');
             }])
             ->get(['user_id', 'first_name', 'last_name', 'mobile_number', 'status', 'email', 'date_of_birth']);
@@ -87,7 +87,7 @@ class RiderController extends Controller
             // Validate input
             $request->validate([
                 'requirement_id' => 'required|integer',
-                'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+                'photo' => 'required|image|mimes:jpeg,png,jpg|max:5120',
                 'user_id' => 'required|integer',
             ]);
     
@@ -157,10 +157,10 @@ class RiderController extends Controller
 
             // Prepare data to update or create in requirement_photos table
             $requirementsData = [
-                6 => $request->input('drivers_license_number'), // For requirement_id 1
-                7 => $request->input('license_expiration_date'), // For requirement_id 2
+                5 => $request->input('drivers_license_number'), // For requirement_id 1
+                6 => $request->input('license_expiration_date'), // For requirement_id 2
                 3 => $request->input('or_expiration_date'), // For requirement_id 4
-                11 => $request->input('plate_number'), // For requirement_id 5
+                10 => $request->input('plate_number'), // For requirement_id 5
             ];
 
             foreach ($requirementsData as $requirement_id => $value) {
